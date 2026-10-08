@@ -62,6 +62,7 @@
             text-decoration: none;
             font-weight: 700;
             letter-spacing: 1px;
+            cursor: pointer;
         }
 
         .nav-links {
@@ -460,15 +461,18 @@
             const links = document.querySelectorAll('.nav-links a');
             links.forEach(link => link.classList.remove('active'));
 
-            document.getElementById(tabId).classList.add('active');
-            document.getElementById('link-' + tabId).classList.add('active');
+            const targetTab = document.getElementById(tabId);
+            const targetLink = document.getElementById('link-' + tabId);
 
-            // Fecha o menu mobile se estiver aberto
-            document.getElementById('navLinks').classList.remove('active');
+            if (targetTab) targetTab.classList.add('active');
+            if (targetLink) targetLink.classList.add('active');
+
+            const navLinks = document.getElementById('navLinks');
+            if (navLinks) navLinks.classList.remove('active');
+            
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Sistema do Quiz
         const quizData = [
             {
                 question: "Qual é considerado o ápice e centro da vida da Igreja Católica?",
@@ -492,11 +496,18 @@
 
         function loadQuiz() {
             const current = quizData[currentQuestion];
-            document.getElementById('quizQuestion').innerText = (currentQuestion + 1) + ". " + current.question;
+            const qEl = document.getElementById('quizQuestion');
+            if(qEl) qEl.innerText = (currentQuestion + 1) + ". " + current.question;
+            
             const optionsEl = document.getElementById('quizOptions');
+            if(!optionsEl) return;
             optionsEl.innerHTML = '';
-            document.getElementById('quizResult').innerText = '';
-            document.getElementById('nextBtn').style.display = 'none';
+            
+            const resEl = document.getElementById('quizResult');
+            if(resEl) resEl.innerText = '';
+            
+            const nextBtn = document.getElementById('nextBtn');
+            if(nextBtn) nextBtn.style.display = 'none';
 
             current.options.forEach((option, index) => {
                 const btn = document.createElement('button');
@@ -513,23 +524,31 @@
             
             buttons.forEach(b => b.disabled = true);
 
+            const resEl = document.getElementById('quizResult');
             if (selectedIndex === current.correct) {
                 btnElement.classList.add('correct');
-                document.getElementById('quizResult').innerText = "Parabéns, resposta correta! 🙏";
-                document.getElementById('quizResult').style.color = "#28a745";
+                if(resEl) {
+                    resEl.innerText = "Parabéns, resposta correta! 🙏";
+                    resEl.style.color = "#28a745";
+                }
                 score++;
             } else {
                 btnElement.classList.add('incorrect');
                 buttons[current.correct].classList.add('correct');
-                document.getElementById('quizResult').innerText = "Não foi desta vez. Continue firme na fé!";
-                document.getElementById('quizResult'].style.color = "#dc3545";
+                if(resEl) {
+                    resEl.innerText = "Não foi desta vez. Continue firme na fé!";
+                    resEl.style.color = "#dc3545";
+                }
             }
 
-            if (currentQuestion < quizData.length - 1) {
-                document.getElementById('nextBtn').style.display = 'block';
-            } else {
-                document.getElementById('nextBtn').innerText = "Reiniciar Quiz";
-                document.getElementById('nextBtn').style.display = 'block';
+            const nextBtn = document.getElementById('nextBtn');
+            if(nextBtn) {
+                if (currentQuestion < quizData.length - 1) {
+                    nextBtn.style.display = 'block';
+                } else {
+                    nextBtn.innerText = "Reiniciar Quiz";
+                    nextBtn.style.display = 'block';
+                }
             }
         }
 
@@ -538,12 +557,12 @@
             if (currentQuestion >= quizData.length) {
                 currentQuestion = 0;
                 score = 0;
-                document.getElementById('nextBtn').innerText = "Próxima Pergunta";
+                const nextBtn = document.getElementById('nextBtn');
+                if(nextBtn) nextBtn.innerText = "Próxima Pergunta";
             }
             loadQuiz();
         }
 
-        // Inicializa o quiz
         loadQuiz();
     </script>
 </body>
