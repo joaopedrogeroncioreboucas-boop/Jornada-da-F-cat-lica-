@@ -469,5 +469,82 @@
         }
 
         // Sistema do Quiz
-        const quizData
-      
+        const quizData = [
+            {
+                question: "Qual é considerado o ápice e centro da vida da Igreja Católica?",
+                options: ["A Sagrada Eucaristia", "A Liturgia das Horas", "A Novena de Natal", "A Procissão de Ramos"],
+                correct: 0
+            },
+            {
+                question: "Em que país ocorreu o famoso Milagre Eucarístico de Lanciano?",
+                options: ["Portugal", "Itália", "Espanha", "França"],
+                correct: 1
+            },
+            {
+                question: "Em qual ano aconteceram as aparições de Nossa Senhora em Fátima?",
+                options: ["1858", "1531", "1917", "1981"],
+                correct: 2
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        function loadQuiz() {
+            const current = quizData[currentQuestion];
+            document.getElementById('quizQuestion').innerText = (currentQuestion + 1) + ". " + current.question;
+            const optionsEl = document.getElementById('quizOptions');
+            optionsEl.innerHTML = '';
+            document.getElementById('quizResult').innerText = '';
+            document.getElementById('nextBtn').style.display = 'none';
+
+            current.options.forEach((option, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-btn';
+                btn.innerText = option;
+                btn.onclick = () => selectOption(index, btn);
+                optionsEl.appendChild(btn);
+            });
+        }
+
+        function selectOption(selectedIndex, btnElement) {
+            const current = quizData[currentQuestion];
+            const buttons = document.querySelectorAll('.quiz-btn');
+            
+            buttons.forEach(b => b.disabled = true);
+
+            if (selectedIndex === current.correct) {
+                btnElement.classList.add('correct');
+                document.getElementById('quizResult').innerText = "Parabéns, resposta correta! 🙏";
+                document.getElementById('quizResult').style.color = "#28a745";
+                score++;
+            } else {
+                btnElement.classList.add('incorrect');
+                buttons[current.correct].classList.add('correct');
+                document.getElementById('quizResult').innerText = "Não foi desta vez. Continue firme na fé!";
+                document.getElementById('quizResult'].style.color = "#dc3545";
+            }
+
+            if (currentQuestion < quizData.length - 1) {
+                document.getElementById('nextBtn').style.display = 'block';
+            } else {
+                document.getElementById('nextBtn').innerText = "Reiniciar Quiz";
+                document.getElementById('nextBtn').style.display = 'block';
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion >= quizData.length) {
+                currentQuestion = 0;
+                score = 0;
+                document.getElementById('nextBtn').innerText = "Próxima Pergunta";
+            }
+            loadQuiz();
+        }
+
+        // Inicializa o quiz
+        loadQuiz();
+    </script>
+</body>
+</html>
